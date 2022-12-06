@@ -3,7 +3,7 @@ import { cn } from '@bem-react/classname';
 import { useDispatch, useSelector } from 'react-redux';
 import './EventPage.scss';
 import { getEventByIdAction } from '../../store/actions/events';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { resetEventsState } from '../../store/reducers/events';
 import {
     YMaps,
@@ -40,7 +40,13 @@ export const EventPage = () => {
     console.log(eventInfo);
     return (
         <div className={cnEventPage()}>
-            <div className={cnEventPage('container')}>
+             <div className={cnEventPage('breadcrumbs')}>
+                <Link to={'/'}>Афиша</Link>
+                <div>{'/'}</div>
+                {eventInfo?.name && <div>{eventInfo.name}</div>}
+            </div>
+            <div className={cnEventPage('scroll-container')}>
+                <div className={cnEventPage('container')}>
                 {eventInfo !== undefined && (
                     <>
                         <div className={cnEventPage('title')}>{eventInfo.name}</div>
@@ -94,6 +100,8 @@ export const EventPage = () => {
                     </>
                 )}
             </div>
+            </div>
+            
         </div>
     );
 };
