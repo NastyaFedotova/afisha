@@ -10,15 +10,18 @@
     "@reduxjs/toolkit": "1.5.0",
     "axios": "0.21.1",
     "prettier": "2.3.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-redux": "^7.2.2",
     "react-router-dom": "^6.4.3",
     "react-scripts": "^5.0.1",
     "redux": "^4.0.5",
     "sass": "^1.56.1",
     "style-dictionary": "^2.10.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "moment": "2.29.4",
+    "moment-timezone": "0.5.34",
+    "@pbe/react-yandex-maps": "^1.2.2"
   },
   "scripts": {
     "start": "react-scripts start",

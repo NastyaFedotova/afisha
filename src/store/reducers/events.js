@@ -3,6 +3,7 @@ import { getEventByIdAction, getEventsAction } from '../actions/events';
 
 const initialState = {
     getEventsStatus: 'initial',
+    getEventByIdStatus: 'initial',
     events: [],
     error: null,
 };
@@ -30,16 +31,16 @@ const eventsSlice = createSlice({
             });
         builder
             .addCase(getEventByIdAction.pending, (state) => {
-                state.getEventsStatus = 'fetching';
+                state.getEventByIdStatus = 'fetching';
                 state.error = null;
             })
             .addCase(getEventByIdAction.fulfilled, (state, { payload }) => {
-                state.getEventsStatus = 'fetch';
+                state.getEventByIdStatus = 'fetch';
                 state.events = [payload];
                 state.error = null;
             })
             .addCase(getEventByIdAction.rejected, (state, { error }) => {
-                state.getEventsStatus = 'error';
+                state.getEventByIdStatus = 'error';
                 state.error = error;
             });
     },

@@ -1,0 +1,22 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  color: rgb(45, 50, 50);
+}
+
+body {
+  font-family: "Source Sans Pro", sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app {
+  min-height: 100vh;
+  
+  &-title {
+    text-align: center;
+    margin-top: 0;
+  }
+}
