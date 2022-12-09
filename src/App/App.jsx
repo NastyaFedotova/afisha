@@ -24,8 +24,8 @@ export const App = () => {
         <div className={cnApp()}>
             <h1 className={cnApp('title')}>Афиша Насти Федотовой</h1>
             <Routes>
-                <Route path="/event/:id" element={<EventPage />} />
-                <Route index exact element={<MainPage />} />
+                <Route path="/event/:id/" element={<EventPage />} />
+                <Route path='/' element={<MainPage />} />
             </Routes>
         </div>
     );

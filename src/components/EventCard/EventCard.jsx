@@ -14,13 +14,13 @@ export const EventCard = ({ event }) => {
                 <div className={cnEventCard('title')}>{event.name}</div>
                 <div className={cnEventCard('info')}>
                     <CalendarIcon width={14} height={14} />
-                    <div className={cnEventCard('duration')}>
+                    <div className={cnEventCard('description')}>
                         {moment(event.date_event).format('D MMMM YYYY, HH:mm')}
                     </div>
                 </div>
                 <div className={cnEventCard('info')}>
                     <GeoIcon />
-                    <div className={cnEventCard('price')}>{event.place}</div>
+                    <div className={cnEventCard('description')}>{event.place}</div>
                 </div>
             </div>
         </div>
