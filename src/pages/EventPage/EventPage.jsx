@@ -118,7 +118,7 @@ export const EventPage = () => {
                                         })}
                                         onClick={handleBookedTickets}
                                     >
-                                        Купить
+                                        Забронировать
                                     </button>
                                 </div>
                             </div>

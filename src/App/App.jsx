@@ -8,6 +8,9 @@ import moment from 'moment';
 import 'moment-timezone';
 import 'moment/locale/ru';
 import { ShoppingCartIcon } from '../assets';
+import { useCallback } from 'react';
+import { changeAuthorizedState } from '../store/reducers/auth';
+import { useDispatch, useSelector } from 'react-redux';
 
 moment.locale('ru');
 moment.tz.load({
@@ -22,10 +25,21 @@ moment.tz.setDefault('Europe/Moscow');
 const cnApp = cn('app');
 
 export const App = () => {
+    const dispatch = useDispatch();
+
+    const { isAuthorized } = useSelector((store) => store.auth);
+
+    const handleChangeAuthState = useCallback(() => {
+        dispatch(changeAuthorizedState());
+    }, [dispatch]);
+
     return (
         <div className={cnApp()}>
             <div className={cnApp('header')}>
                 <h1 className={cnApp('title')}>Афиша Насти Федотовой</h1>
+                <button className={cnApp('button')} type="button" onClick={handleChangeAuthState}>
+                    {isAuthorized ? 'Выйти' : 'Авторизация'}
+                </button>
                 <Link to="/shopping-cart">
                     <ShoppingCartIcon width={44} height={44} />
                 </Link>

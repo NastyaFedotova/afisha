@@ -35,7 +35,13 @@ export const ShoppingCartPage = () => {
 
     const handleBoughtTickets = useCallback(
         (id_ticket) => () => {
-            dispatch(patchTicketsAction({ id_ticket: id_ticket, ticket_status: 'bought', date_of_buying: moment() }));
+            dispatch(
+                patchTicketsAction({
+                    id_ticket: id_ticket,
+                    ticket_status: 'bought',
+                    date_of_buying: moment(),
+                }),
+            );
         },
         [dispatch],
     );
@@ -104,7 +110,7 @@ export const ShoppingCartPage = () => {
                                                 </div>
                                                 <div className={cnShoppingCartPage('info-row')}>
                                                     <div className={cnShoppingCartPage('info-title')}>
-                                                         Суммарная стоимость:
+                                                        Суммарная стоимость:
                                                     </div>
                                                     <span className={cnShoppingCartPage('info-description')}>
                                                         {`${ticket.count * event.price}руб.`}
@@ -118,7 +124,7 @@ export const ShoppingCartPage = () => {
                                                 className={cnShoppingCartPage('button', { action: true })}
                                                 onClick={handleBoughtTickets(ticket.id_ticket)}
                                             >
-                                                Купить
+                                                Оплатить
                                             </button>
                                             <button
                                                 type="button"

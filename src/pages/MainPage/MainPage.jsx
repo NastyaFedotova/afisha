@@ -17,6 +17,7 @@ export const MainPage = () => {
     const { events, getEventsStatus, eventsPriceRange, getEventsPriceRangeStatus } = useSelector(
         (store) => store.events,
     );
+    const { isAuthorized } = useSelector((store) => store.auth);
 
     useLoader([getEventsStatus, getEventsPriceRangeStatus]);
 
@@ -43,50 +44,53 @@ export const MainPage = () => {
                 {({ handleSubmit }) => (
                     <form onSubmit={handleSubmit} className={cnMainPage('filter-row')}>
                         <Field name="name">
-                            {({ input }) => (
+                            {({ input: input_fields }) => (
                                 <input
-                                    {...input}
+                                    {...input_fields}
                                     className={cnMainPage('filter-input')}
                                     type="text"
                                     placeholder="Название мероприятия"
+                                    disabled={!isAuthorized}
                                 />
                             )}
                         </Field>
                         <Field name="priceMin">
-                            {({ input }) => {
-                                input.onChange(
-                                    input.value < eventsPriceRange?.price_min && input.value.length
+                            {({ input: input_fields }) => {
+                                input_fields.onChange(
+                                    input_fields.value < eventsPriceRange?.price_min && input_fields.value.length
                                         ? eventsPriceRange?.price_min
-                                        : input.value,
+                                        : input_fields.value,
                                 );
                                 return (
                                     <input
-                                        {...input}
+                                        {...input_fields}
                                         className={cnMainPage('filter-input')}
                                         type="number"
                                         placeholder={`Мин. цена ${eventsPriceRange?.price_min}руб.`}
+                                        disabled={!isAuthorized}
                                     />
                                 );
                             }}
                         </Field>
                         <Field name="priceMax">
-                            {({ input }) => {
-                                input.onChange(
-                                    input.value > eventsPriceRange?.price_max
+                            {({ input: input_fields }) => {
+                                input_fields.onChange(
+                                    input_fields.value > eventsPriceRange?.price_max
                                         ? eventsPriceRange?.price_max
-                                        : input.value,
+                                        : input_fields.value,
                                 );
                                 return (
                                     <input
-                                        {...input}
+                                        {...input_fields}
                                         className={cnMainPage('filter-input')}
                                         type="number"
                                         placeholder={`Макс. цена ${eventsPriceRange?.price_max}руб.`}
+                                        disabled={!isAuthorized}
                                     />
                                 );
                             }}
                         </Field>
-                        <button type="submit" className={cnMainPage('filter-button')}>
+                        <button type="submit" className={cnMainPage('filter-button')} disabled={!isAuthorized}>
                             Поиск
                         </button>
                     </form>
