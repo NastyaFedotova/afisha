@@ -3,7 +3,7 @@ import { getApiRequest } from '..';
 export const getEvents = async (values) => {
     return await getApiRequest(`/events/`, {
         params: {
-            event_ids: values?.event_ids.join(','),
+            event_ids: values?.event_ids?.join(','),
             name: values?.name,
             price_min: values?.priceMin,
             price_max: values?.priceMax,
