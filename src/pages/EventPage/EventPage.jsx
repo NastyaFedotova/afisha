@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { cn } from '@bem-react/classname';
 import { useDispatch, useSelector } from 'react-redux';
 import './EventPage.scss';
@@ -16,6 +16,8 @@ import {
     TypeSelector,
 } from '@pbe/react-yandex-maps';
 import moment from 'moment';
+import { createBookedTicketsAction } from '../../store/actions/tickets';
+import { useLoader } from '../../hooks/useLoader';
 
 const cnEventPage = cn('event-page');
 
@@ -25,25 +27,43 @@ export const EventPage = () => {
     const params = useParams();
     const { id: event_id } = params;
 
+    const [ticketsCount, setTicketsCount] = useState();
     const { events, getEventByIdStatus } = useSelector((store) => store.events);
-    console.log('render');
+    const { createBookedTicketsStatus } = useSelector((store) => store.tickets);
+
+    useLoader([createBookedTicketsStatus, getEventByIdStatus]);
 
     useEffect(() => {
         if (getEventByIdStatus === 'initial' && event_id) {
-            console.log(event_id);
             dispatch(getEventByIdAction(event_id));
         }
     }, [dispatch, getEventByIdStatus, event_id]);
 
     const eventInfo = useMemo(() => {
-        console.log('update memo');
         return events !== undefined ? events[0] : undefined;
     }, [events]);
+
+    const onTicketsCountChange = useCallback((event) => {
+        setTicketsCount(event.target.value < 1 ? '' : event.target.value);
+    }, []);
+
+    const handleBookedTickets = useCallback(() => {
+        dispatch(
+            createBookedTicketsAction({
+                id_user: 1,
+                id_event: event_id,
+                count: ticketsCount,
+                booking_date: moment(),
+                ticket_status: 'booked',
+            }),
+        );
+        setTicketsCount('');
+    }, [dispatch, event_id, ticketsCount]);
 
     useEffect(() => {
         return () => dispatch(resetEventsState());
     }, [dispatch]);
-    
+
     return (
         <div className={cnEventPage()}>
             <div className={cnEventPage('breadcrumbs')}>
@@ -76,6 +96,30 @@ export const EventPage = () => {
                                         <div className={cnEventPage('info-title')}>Адрес</div>
                                         <span className={cnEventPage('info-description')}>{eventInfo.address}</span>
                                     </div>
+                                </div>
+                            </div>
+                            <div className={cnEventPage('about')}>
+                                <div className={cnEventPage('about-title')}>Билеты в продаже</div>
+                                <div className={cnEventPage('about-description')}>
+                                    <div
+                                        className={cnEventPage('ticket-info')}
+                                    >{`Фан-зона - ${eventInfo.price}руб.`}</div>
+                                    <input
+                                        className={cnEventPage('ticket-count')}
+                                        type={'number'}
+                                        value={ticketsCount}
+                                        onChange={onTicketsCountChange}
+                                        placeholder="Кол-во билетов"
+                                    />
+                                    <button
+                                        disabled={!ticketsCount || ticketsCount < 1}
+                                        className={cnEventPage('ticket-button', {
+                                            active: Boolean(ticketsCount) && ticketsCount >= 1,
+                                        })}
+                                        onClick={handleBookedTickets}
+                                    >
+                                        Забронировать
+                                    </button>
                                 </div>
                             </div>
                             <div className={cnEventPage('about')}>

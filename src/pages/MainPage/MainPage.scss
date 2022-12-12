@@ -5,6 +5,40 @@
     align-items: center;
     padding: 20px;
 
+    &-filter {
+        &-row {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 10px 10px;
+            margin-bottom: 20px;
+        }
+
+        &-input {
+            border-radius: 4px;
+            border: 0;
+            outline: 0;
+            font-size: 20px;
+            font-weight: 400;
+            line-height: 20px;
+            height: 28px;
+        }
+
+        &-button {
+            border-radius: 4px;
+            border: 0;
+            cursor: pointer;
+            background-color: #ff8a8a;
+            font-size: 20px;
+            font-weight: 400;
+            line-height: 20px;
+            padding: 4px 14px;
+            &:hover {
+                background-color: #ffa5a5;
+            }
+        }
+    }
+
     &-events-wrapper {
         width: 100%;
         display: flex;
@@ -13,7 +47,7 @@
         gap: 30px 30px;
     }
 
-    &-link{
+    &-link {
         text-decoration: none;
     }
 }
