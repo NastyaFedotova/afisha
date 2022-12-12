@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 const CnPageLoader = cn('pageLoader');
 
-export const PageLoader = React.memo(({ showLoading, zIndex }) => {
+export const PageLoader = ({ zIndex }) => {
     const { isLoading } = useSelector((store) => store.loader);
     console.log(isLoading);
     const [isShow, setIsShow] = useState(true);
@@ -22,9 +22,9 @@ export const PageLoader = React.memo(({ showLoading, zIndex }) => {
         return () => {
             clearTimeout(setTimeoutId);
         };
-    }, [isLoading, showLoading]);
+    }, [isLoading]);
 
-    if (isShow || isLoading || showLoading) {
+    if (isShow || isLoading) {
         return (
             <div className={CnPageLoader()} style={{ zIndex }}>
                 <div className={CnPageLoader('loader')}>
@@ -35,4 +35,4 @@ export const PageLoader = React.memo(({ showLoading, zIndex }) => {
     }
 
     return null;
-});
+};
