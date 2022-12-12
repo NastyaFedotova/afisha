@@ -9,7 +9,6 @@ const CnPageLoader = cn('pageLoader');
 
 export const PageLoader = ({ zIndex }) => {
     const { isLoading } = useSelector((store) => store.loader);
-    console.log(isLoading);
     const [isShow, setIsShow] = useState(true);
 
     useEffect(() => {
