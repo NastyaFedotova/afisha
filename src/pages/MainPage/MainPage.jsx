@@ -2,12 +2,12 @@ import React, { useCallback, useEffect } from 'react';
 import { cn } from '@bem-react/classname';
 import { useDispatch, useSelector } from 'react-redux';
 import { getEventsAction, getEventsPriceRangeAction } from '../../store/actions/events';
-import { EventCard } from '../../components/EventCard/EventCard';
+import { EventCard } from '../../components/EventCard';
 import './MainPage.scss';
 import { Link } from 'react-router-dom';
 import { Form, Field } from 'react-final-form';
 import { resetEventsState } from '../../store/reducers/events';
-import { PageLoader } from '../../components/PageLoader/PageLoader';
+import { PageLoader } from '../../components/PageLoader';
 import { useLoader } from '../../hooks/useLoader';
 
 const cnMainPage = cn('main-page');

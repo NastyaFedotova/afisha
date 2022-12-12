@@ -1,11 +1,13 @@
 import './App.scss';
-import { Route, Routes } from 'react-router-dom';
-import { EventPage } from '../pages/EventPage/EventPage';
-import { MainPage } from '../pages/MainPage/MainPage';
+import { Link, Route, Routes } from 'react-router-dom';
+import { ShoppingCartPage } from '../pages/ShoppingCartPage';
+import { EventPage } from '../pages/EventPage';
+import { MainPage } from '../pages/MainPage';
 import { cn } from '@bem-react/classname';
 import moment from 'moment';
 import 'moment-timezone';
 import 'moment/locale/ru';
+import { ShoppingCartIcon } from '../assets';
 
 moment.locale('ru');
 moment.tz.load({
@@ -22,10 +24,16 @@ const cnApp = cn('app');
 export const App = () => {
     return (
         <div className={cnApp()}>
-            <h1 className={cnApp('title')}>Афиша Насти Федотовой</h1>
+            <div className={cnApp('header')}>
+                <h1 className={cnApp('title')}>Афиша Насти Федотовой</h1>
+                <Link to="/shopping-cart">
+                    <ShoppingCartIcon width={44} height={44} />
+                </Link>
+            </div>
             <Routes>
                 <Route path="/event/:id/" element={<EventPage />} />
-                <Route path='/' element={<MainPage />} />
+                <Route path="/" element={<MainPage />} />
+                <Route path="/shopping-cart" element={<ShoppingCartPage />} />
             </Routes>
         </div>
     );
