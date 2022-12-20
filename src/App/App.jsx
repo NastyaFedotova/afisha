@@ -32,7 +32,6 @@ export const App = () => {
     const handleChangeAuthState = useCallback(() => {
         dispatch(changeAuthorizedState());
     }, [dispatch]);
-
     return (
         <div className={cnApp()}>
             <div className={cnApp('header')}>
@@ -48,6 +47,7 @@ export const App = () => {
                 <Route path="/event/:id/" element={<EventPage />} />
                 <Route path="/" element={<MainPage />} />
                 <Route path="/shopping-cart" element={<ShoppingCartPage />} />
+                <Route path="*" element={<MainPage />} />
             </Routes>
         </div>
     );
