@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { cn } from '@bem-react/classname';
 import { useDispatch, useSelector } from 'react-redux';
 import './EventPage.scss';
-import { getEventByIdAction } from '../../store/actions/events';
+import { changeEventRemainingTicketsAction, getEventByIdAction } from '../../store/actions/events';
 import { Link, useParams } from 'react-router-dom';
 import { resetEventsState } from '../../store/reducers/events';
 import {
@@ -16,7 +16,6 @@ import {
     TypeSelector,
 } from '@pbe/react-yandex-maps';
 import moment from 'moment';
-import { createBookedTicketsAction } from '../../store/actions/tickets';
 import { useLoader } from '../../hooks/useLoader';
 
 const cnEventPage = cn('event-page');
@@ -28,10 +27,10 @@ export const EventPage = () => {
     const { id: event_id } = params;
 
     const [ticketsCount, setTicketsCount] = useState();
-    const { events, getEventByIdStatus } = useSelector((store) => store.events);
+    const { events, getEventByIdStatus, changeEventRemainingTicketsStatus } = useSelector((store) => store.events);
     const { createBookedTicketsStatus } = useSelector((store) => store.tickets);
-
-    useLoader([createBookedTicketsStatus, getEventByIdStatus]);
+const {user} = useSelector((store)=>store.user)
+    useLoader([createBookedTicketsStatus, getEventByIdStatus, changeEventRemainingTicketsStatus]);
 
     useEffect(() => {
         if (getEventByIdStatus === 'initial' && event_id) {
@@ -43,22 +42,34 @@ export const EventPage = () => {
         return events !== undefined ? events[0] : undefined;
     }, [events]);
 
-    const onTicketsCountChange = useCallback((event) => {
-        setTicketsCount(event.target.value < 1 ? '' : event.target.value);
-    }, []);
+    const onTicketsCountChange = useCallback(
+        (event) => {
+            setTicketsCount(
+                event.target.value < 1
+                    ? ''
+                    : Number(event.target.value) > eventInfo?.remaining_tickets
+                    ? eventInfo?.remaining_tickets
+                    : event.target.value,
+            );
+        },
+        [eventInfo?.remaining_tickets],
+    );
 
     const handleBookedTickets = useCallback(() => {
-        dispatch(
-            createBookedTicketsAction({
-                id_user: 1,
-                id_event: event_id,
-                count: ticketsCount,
-                booking_date: moment(),
-                ticket_status: 'booked',
-            }),
-        );
+        if (eventInfo && user?.id) {
+            dispatch(
+                changeEventRemainingTicketsAction({
+                    user: user.id,
+                    event: event_id,
+                    count: ticketsCount,
+                    booking_date: moment(),
+                    ticket_status: 'booked',
+                    remaining_tickets: eventInfo?.remaining_tickets - ticketsCount,
+                }),
+            );
+        }
         setTicketsCount('');
-    }, [dispatch, event_id, ticketsCount]);
+    }, [dispatch, event_id, ticketsCount, eventInfo, user.id]);
 
     useEffect(() => {
         return () => dispatch(resetEventsState());
@@ -69,20 +80,20 @@ export const EventPage = () => {
             <div className={cnEventPage('breadcrumbs')}>
                 <Link to={'/'}>Афиша</Link>
                 <div>{'/'}</div>
-                {eventInfo?.name && <div>{eventInfo.name}</div>}
+                {eventInfo?.title && <div>{eventInfo.title}</div>}
             </div>
             <div className={cnEventPage('scroll-container')}>
                 <div className={cnEventPage('container')}>
                     {eventInfo !== undefined && (
                         <>
-                            <div className={cnEventPage('title')}>{eventInfo.name}</div>
+                            <div className={cnEventPage('title')}>{eventInfo.title}</div>
                             <div className={cnEventPage('mainInfo')}>
                                 <img src={eventInfo.img} className={cnEventPage('img')} />
                                 <div className={cnEventPage('info')}>
                                     <div>
                                         <div className={cnEventPage('info-title')}>Дата</div>
                                         <span className={cnEventPage('info-description')}>
-                                            {moment(eventInfo.date_event).format('D MMMM YYYY, HH:mm')}
+                                            {moment(eventInfo.event_date).format('D MMMM YYYY, HH:mm')}
                                         </span>
                                     </div>
                                     {eventInfo.place && (
@@ -104,6 +115,9 @@ export const EventPage = () => {
                                     <div
                                         className={cnEventPage('ticket-info')}
                                     >{`Фан-зона - ${eventInfo.price}руб.`}</div>
+                                    <div
+                                        className={cnEventPage('ticket-info')}
+                                    >{`Осталось - ${eventInfo.remaining_tickets}шт.`}</div>
                                     <input
                                         className={cnEventPage('ticket-count')}
                                         type={'number'}

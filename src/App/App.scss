@@ -12,6 +12,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+  text-decoration: none;
+}
+
 .app {
   min-height: 100vh;
   background-color: #f8e8e2;
@@ -26,7 +30,10 @@ body {
   &-title {
     text-align: start;
     margin-top: 0;
-    margin-right: auto;
+
+    &-wrapper {
+      margin-right: auto;
+    }
   }
 
   &-button {
@@ -41,7 +48,7 @@ body {
     line-height: 20px;
     padding: 4px 14px;
     &:hover {
-        background-color: #ffa5a5;
+      background-color: #ffa5a5;
     }
-}
+  }
 }

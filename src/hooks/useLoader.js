@@ -9,7 +9,7 @@ export const useLoader = (statuses) => {
         const isFetching = statuses.reduce((result, status) => {
             return result || status === 'fetching';
         }, false);
-        
+
         if (isFetching) {
             dispatch(loading());
         } else {
