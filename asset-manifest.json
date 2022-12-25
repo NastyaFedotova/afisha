@@ -1,19 +1,20 @@
 {
   "files": {
-    "main.css": "/afisha/static/css/main.5be5c10a.css",
-    "main.js": "/afisha/static/js/main.da3dd408.js",
+    "main.css": "/afisha/static/css/main.9dca0805.css",
+    "main.js": "/afisha/static/js/main.00cc09c7.js",
     "static/js/787.a82ced20.chunk.js": "/afisha/static/js/787.a82ced20.chunk.js",
     "static/media/calendar-icon.svg": "/afisha/static/media/calendar-icon.bbff8871c00ae8214b062176de22c1fe.svg",
     "static/media/loader.svg": "/afisha/static/media/loader.a1daabc1038b4c9bbea1788a0617036d.svg",
+    "static/media/ticket-icon.svg": "/afisha/static/media/ticket-icon.6a7c6cd892cbc80c7276e238457c6b68.svg",
     "static/media/shopping-cart-icon.svg": "/afisha/static/media/shopping-cart-icon.152a119b350083d023ec16f23680ae35.svg",
     "index.html": "/afisha/index.html",
     "static/media/geo-icon.svg": "/afisha/static/media/geo-icon.c1b7eac9bb58e12b88e81ad998b1690c.svg",
-    "main.5be5c10a.css.map": "/afisha/static/css/main.5be5c10a.css.map",
-    "main.da3dd408.js.map": "/afisha/static/js/main.da3dd408.js.map",
+    "main.9dca0805.css.map": "/afisha/static/css/main.9dca0805.css.map",
+    "main.00cc09c7.js.map": "/afisha/static/js/main.00cc09c7.js.map",
     "787.a82ced20.chunk.js.map": "/afisha/static/js/787.a82ced20.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5be5c10a.css",
-    "static/js/main.da3dd408.js"
+    "static/css/main.9dca0805.css",
+    "static/js/main.00cc09c7.js"
   ]
 }
