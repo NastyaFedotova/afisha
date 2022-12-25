@@ -17,7 +17,7 @@ export const MainPage = () => {
     const { events, getEventsStatus, eventsPriceRange, getEventsPriceRangeStatus } = useSelector(
         (store) => store.events,
     );
-    const { isAuthorized } = useSelector((store) => store.auth);
+    const { isAuthorized } = useSelector((store) => store.user);
 
     useLoader([getEventsStatus, getEventsPriceRangeStatus]);
 
@@ -43,7 +43,7 @@ export const MainPage = () => {
             <Form onSubmit={handleFormSubmit}>
                 {({ handleSubmit }) => (
                     <form onSubmit={handleSubmit} className={cnMainPage('filter-row')}>
-                        <Field name="name">
+                        <Field name="title">
                             {({ input: input_fields }) => (
                                 <input
                                     {...input_fields}
@@ -97,9 +97,9 @@ export const MainPage = () => {
                 )}
             </Form>
             <div className={cnMainPage('events-wrapper')}>
-                {events.map((event) => (
-                    <Link to={`/event/${event.id_event}`} className={cnMainPage('link')}>
-                        <EventCard event={event} />
+                {events.map((event, index) => (
+                    <Link to={`/event/${event.id}`} className={cnMainPage('link')}>
+                        <EventCard key={index} event={event} />
                     </Link>
                 ))}
             </div>

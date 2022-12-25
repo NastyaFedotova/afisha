@@ -57,7 +57,7 @@ const ticketsSlice = createSlice({
             })
             .addCase(patchTicketsAction.fulfilled, (state, { payload }) => {
                 state.updateTicketStatus = 'fetch';
-                state.tickets = state.tickets.filter((ticket) => ticket.id_ticket !== payload.id_ticket);
+                state.tickets = state.tickets?.filter((ticket) => ticket.id_ticket !== payload.id_ticket) ?? [];
                 state.error = null;
             })
             .addCase(patchTicketsAction.rejected, (state, { error }) => {
@@ -70,8 +70,10 @@ const ticketsSlice = createSlice({
                 state.error = null;
             })
             .addCase(deleteTicketsAction.fulfilled, (state, { payload }) => {
+                const { id_ticket } = payload;
+
                 state.deleteTicketStatus = 'fetch';
-                state.tickets = state.tickets.filter((ticket) => ticket.id_ticket !== payload);
+                state.tickets = state.tickets?.filter((ticket) => ticket.id_ticket !== id_ticket) ?? [];
                 state.error = null;
             })
             .addCase(deleteTicketsAction.rejected, (state, { error }) => {

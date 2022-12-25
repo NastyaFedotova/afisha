@@ -1,5 +1,5 @@
 import './App.scss';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import { ShoppingCartPage } from '../pages/ShoppingCartPage';
 import { EventPage } from '../pages/EventPage';
 import { MainPage } from '../pages/MainPage';
@@ -9,8 +9,10 @@ import 'moment-timezone';
 import 'moment/locale/ru';
 import { ShoppingCartIcon } from '../assets';
 import { useCallback } from 'react';
-import { changeAuthorizedState } from '../store/reducers/auth';
 import { useDispatch, useSelector } from 'react-redux';
+import { AuthPage } from '../pages/AuthPage';
+import { RegistrationPage } from '../pages/RegistrationPage';
+import { unAuthorizeAction } from '../store/actions/user';
 
 moment.locale('ru');
 moment.tz.load({
@@ -26,27 +28,43 @@ const cnApp = cn('app');
 
 export const App = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
 
-    const { isAuthorized } = useSelector((store) => store.auth);
+    const { isAuthorized } = useSelector((store) => store.user);
 
-    const handleChangeAuthState = useCallback(() => {
-        dispatch(changeAuthorizedState());
+    const handleLogout = useCallback(() => {
+        dispatch(unAuthorizeAction());
     }, [dispatch]);
+
     return (
         <div className={cnApp()}>
             <div className={cnApp('header')}>
-                <h1 className={cnApp('title')}>Афиша Насти Федотовой</h1>
-                <button className={cnApp('button')} type="button" onClick={handleChangeAuthState}>
-                    {isAuthorized ? 'Выйти' : 'Авторизация'}
-                </button>
-                <Link to="/shopping-cart">
-                    <ShoppingCartIcon width={44} height={44} />
+                <Link to="/" className={cnApp('title-wrapper')}>
+                    <h1 className={cnApp('title')}>Афиша Насти Федотовой</h1>
                 </Link>
+                {!['/auth', '/registration'].includes(location?.pathname) && (
+                    <>
+                        {isAuthorized ? (
+                            <button className={cnApp('button')} type="button" onClick={handleLogout}>
+                                Выйти
+                            </button>
+                        ) : (
+                            <Link to="/auth" className={cnApp('button')}>
+                                Авторизация
+                            </Link>
+                        )}
+                        <Link to="/shopping-cart">
+                            <ShoppingCartIcon width={44} height={44} />
+                        </Link>
+                    </>
+                )}
             </div>
             <Routes>
-                <Route path="/event/:id/" element={<EventPage />} />
                 <Route path="/" element={<MainPage />} />
-                <Route path="/shopping-cart" element={<ShoppingCartPage />} />
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/registration" element={<RegistrationPage />} />
+                <Route path="/event/:id/" element={isAuthorized ? <EventPage /> : <AuthPage />} />
+                <Route path="/shopping-cart" element={isAuthorized ? <ShoppingCartPage /> : <AuthPage />} />
                 <Route path="*" element={<MainPage />} />
             </Routes>
         </div>

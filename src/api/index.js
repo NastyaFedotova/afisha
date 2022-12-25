@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-export const api = axios.create({ baseURL: 'http://127.0.0.1:8000/' });
+export const api = axios.create({baseURL:'http://127.0.0.1:8000', withCredentials: true });
 
 export const getApiRequest = (link, body) =>
     api
         .get(link, body)
         .then((res) => res.data)
         .catch((err) => {
-            console.log(JSON.stringify(err));
+            throw JSON.stringify(err.response?.data);
         });
 
 export const patchApiRequest = (link, body) =>
@@ -15,7 +15,7 @@ export const patchApiRequest = (link, body) =>
         .patch(link, body)
         .then((res) => res.data)
         .catch((err) => {
-            console.log(JSON.stringify(err));
+            throw JSON.stringify(err.response?.data);
         });
 
 export const postApiRequest = (link, body) =>
@@ -23,7 +23,7 @@ export const postApiRequest = (link, body) =>
         .post(link, body)
         .then((res) => res.data)
         .catch((err) => {
-            console.log(JSON.stringify(err));
+            throw JSON.stringify(err.response?.data);
         });
 
 export const deleteApiRequest = (link, body) =>
@@ -31,5 +31,5 @@ export const deleteApiRequest = (link, body) =>
         .delete(link, body)
         .then((res) => res.data)
         .catch((err) => {
-            console.log(JSON.stringify(err));
+            throw JSON.stringify(err.response?.data);
         });

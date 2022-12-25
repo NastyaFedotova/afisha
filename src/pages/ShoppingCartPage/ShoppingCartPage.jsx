@@ -16,20 +16,22 @@ const cnShoppingCartPage = cn('shopping-cart-page');
 export const ShoppingCartPage = () => {
     const dispatch = useDispatch();
 
-    const { tickets, getTicketsStatus, updateTicketStatus, deleteTicketStatus } = useSelector((store) => store.tickets);
+    const { tickets, getTicketsStatus, updateTicketStatus, deleteTicketStatus, patchEventByIdStatus } = useSelector(
+        (store) => store.tickets,
+    );
     const { events, getEventsStatus } = useSelector((store) => store.events);
 
-    useLoader([getEventsStatus, getTicketsStatus, updateTicketStatus, deleteTicketStatus]);
+    useLoader([getEventsStatus, getTicketsStatus, updateTicketStatus, deleteTicketStatus, patchEventByIdStatus]);
 
     useEffect(() => {
         if (getTicketsStatus === 'initial') {
-            dispatch(getTicketsAction({ user_id: 1, ticket_status: 'booked' }));
+            dispatch(getTicketsAction({ user_id: 1, status: 'booked' }));
         }
     }, [dispatch, getTicketsStatus]);
 
     useEffect(() => {
         if (getEventsStatus === 'initial' && Boolean(tickets?.length)) {
-            dispatch(getEventsAction({ event_ids: tickets.map((ticket) => ticket.id_event) }));
+            dispatch(getEventsAction({ event_ids: tickets.map((ticket) => ticket.event) }));
         }
     }, [dispatch, getEventsStatus, tickets]);
 
@@ -38,8 +40,8 @@ export const ShoppingCartPage = () => {
             dispatch(
                 patchTicketsAction({
                     id_ticket: id_ticket,
-                    ticket_status: 'bought',
-                    date_of_buying: moment(),
+                    status: 'bought',
+                    buying_date: moment(),
                 }),
             );
         },
@@ -47,8 +49,8 @@ export const ShoppingCartPage = () => {
     );
 
     const handleRemoveTicketFromShoppingCart = useCallback(
-        (id_ticket) => () => {
-            dispatch(deleteTicketsAction(id_ticket));
+        (id_ticket, id_event, remaining_tickets) => () => {
+            dispatch(deleteTicketsAction({ id_ticket, id_event, remaining_tickets }));
         },
         [dispatch],
     );
@@ -74,22 +76,23 @@ export const ShoppingCartPage = () => {
                         {Boolean(events?.length) &&
                             Boolean(tickets?.length) &&
                             tickets.map((ticket, index) => {
-                                const event = events.find((event) => event.id_event === ticket.id_event);
+                                const event = events.find((event) => event.id === ticket.event);
                                 return (
                                     <div key={index}>
+                                        {event.remaining_tickets}
                                         <div className={cnShoppingCartPage('mainInfo')}>
                                             <img src={event.img} className={cnShoppingCartPage('img')} />
                                             <div className={cnShoppingCartPage('info')}>
                                                 <div className={cnShoppingCartPage('info-row')}>
                                                     <div className={cnShoppingCartPage('info-title')}>Название:</div>
                                                     <span className={cnShoppingCartPage('info-description')}>
-                                                        {event.name}
+                                                        {event.title}
                                                     </span>
                                                 </div>
                                                 <div className={cnShoppingCartPage('info-row')}>
                                                     <div className={cnShoppingCartPage('info-title')}>Дата:</div>
                                                     <span className={cnShoppingCartPage('info-description')}>
-                                                        {moment(event.date_event).format('D MMMM YYYY, HH:mm')}
+                                                        {moment(event.event_date).format('D MMMM YYYY, HH:mm')}
                                                     </span>
                                                 </div>
                                                 {event.place && (
@@ -122,14 +125,18 @@ export const ShoppingCartPage = () => {
                                             <button
                                                 type="button"
                                                 className={cnShoppingCartPage('button', { action: true })}
-                                                onClick={handleBoughtTickets(ticket.id_ticket)}
+                                                onClick={handleBoughtTickets(ticket.id)}
                                             >
                                                 Оплатить
                                             </button>
                                             <button
                                                 type="button"
                                                 className={cnShoppingCartPage('button')}
-                                                onClick={handleRemoveTicketFromShoppingCart(ticket.id_ticket)}
+                                                onClick={handleRemoveTicketFromShoppingCart(
+                                                    ticket.id,
+                                                    event.id,
+                                                    event.remaining_tickets + ticket.count,
+                                                )}
                                             >
                                                 Убрать из корзины
                                             </button>
