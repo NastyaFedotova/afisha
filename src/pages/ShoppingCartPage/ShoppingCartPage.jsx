@@ -23,11 +23,13 @@ export const ShoppingCartPage = () => {
 
     useLoader([getEventsStatus, getTicketsStatus, updateTicketStatus, deleteTicketStatus, patchEventByIdStatus]);
 
+    const {user} =useSelector((store)=>store.user)
+
     useEffect(() => {
         if (getTicketsStatus === 'initial') {
-            dispatch(getTicketsAction({ user_id: 1, status: 'booked' }));
+            dispatch(getTicketsAction({ user_id: user?.id, status: 'BOOKED' }));
         }
-    }, [dispatch, getTicketsStatus]);
+    }, [dispatch, getTicketsStatus, user?.id]);
 
     useEffect(() => {
         if (getEventsStatus === 'initial' && Boolean(tickets?.length)) {
@@ -40,7 +42,7 @@ export const ShoppingCartPage = () => {
             dispatch(
                 patchTicketsAction({
                     id_ticket: id_ticket,
-                    status: 'bought',
+                    status: 'BOUGHT',
                     buying_date: moment(),
                 }),
             );

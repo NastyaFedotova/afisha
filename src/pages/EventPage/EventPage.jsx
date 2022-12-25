@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { cn } from '@bem-react/classname';
 import { useDispatch, useSelector } from 'react-redux';
 import './EventPage.scss';
-import { changeEventRemainingTicketsAction, getEventByIdAction } from '../../store/actions/events';
+import { getEventByIdAction, patchEventByIdAction } from '../../store/actions/events';
 import { Link, useParams } from 'react-router-dom';
 import { resetEventsState } from '../../store/reducers/events';
 import {
@@ -17,6 +17,7 @@ import {
 } from '@pbe/react-yandex-maps';
 import moment from 'moment';
 import { useLoader } from '../../hooks/useLoader';
+import { createBookedTicketsAction } from '../../store/actions/tickets';
 
 const cnEventPage = cn('event-page');
 
@@ -29,7 +30,7 @@ export const EventPage = () => {
     const [ticketsCount, setTicketsCount] = useState();
     const { events, getEventByIdStatus, changeEventRemainingTicketsStatus } = useSelector((store) => store.events);
     const { createBookedTicketsStatus } = useSelector((store) => store.tickets);
-const {user} = useSelector((store)=>store.user)
+    const { user } = useSelector((store) => store.user);
     useLoader([createBookedTicketsStatus, getEventByIdStatus, changeEventRemainingTicketsStatus]);
 
     useEffect(() => {
@@ -58,15 +59,21 @@ const {user} = useSelector((store)=>store.user)
     const handleBookedTickets = useCallback(() => {
         if (eventInfo && user?.id) {
             dispatch(
-                changeEventRemainingTicketsAction({
+                createBookedTicketsAction({
                     user: user.id,
                     event: event_id,
                     count: ticketsCount,
                     booking_date: moment(),
-                    ticket_status: 'booked',
+                    status: 'BOOKED',
+                }),
+            );
+            dispatch(
+                patchEventByIdAction({
+                    id_event: event_id,
                     remaining_tickets: eventInfo?.remaining_tickets - ticketsCount,
                 }),
             );
+            
         }
         setTicketsCount('');
     }, [dispatch, event_id, ticketsCount, eventInfo, user.id]);

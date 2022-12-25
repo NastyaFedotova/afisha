@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
-    changeEventRemainingTicketsAction,
     getEventByIdAction,
     getEventsAction,
     getEventsPriceRangeAction,
@@ -14,6 +13,7 @@ const initialState = {
     getEventsPriceRangeStatus: 'initial',
     patchEventByIdStatus: 'initial',
     changeEventRemainingTicketsStatus: 'initial',
+    deleteEventStatus: 'initial',
     events: [],
     eventsPriceRange: null,
     error: null,
@@ -75,7 +75,7 @@ const eventsSlice = createSlice({
             })
             .addCase(patchEventByIdAction.fulfilled, (state, { payload }) => {
                 state.patchEventByIdStatus = 'fetch';
-                state.events = state.events.map((event) => (event.id_event === payload.id_event ? payload : event));
+                state.events = state.events.map((event) => (event.id === payload.id ? payload : event));
                 state.error = null;
             })
             .addCase(patchEventByIdAction.rejected, (state, { error }) => {
@@ -83,30 +83,18 @@ const eventsSlice = createSlice({
                 state.error = error;
             });
         builder
-            .addCase(changeEventRemainingTicketsAction.pending, (state) => {
-                state.changeEventRemainingTicketsStatus = 'fetching';
-                state.error = null;
-            })
-            .addCase(changeEventRemainingTicketsAction.fulfilled, (state, { payload }) => {
-                state.changeEventRemainingTicketsStatus = 'fetch';
-                state.events = [payload];
-                state.error = null;
-            })
-            .addCase(changeEventRemainingTicketsAction.rejected, (state, { error }) => {
-                state.changeEventRemainingTicketsStatus = 'error';
-                state.error = error;
-            });
-        builder
             .addCase(deleteTicketsAction.pending, (state) => {
+                state.deleteEventStatus = 'fetching';
                 state.error = null;
             })
             .addCase(deleteTicketsAction.fulfilled, (state, { payload }) => {
-                console.log(payload);
+                state.deleteEventStatus = 'fetch';
                 const { eventById } = payload;
-                state.events = state.events.map((event) => (event.id_event === eventById.id_event ? eventById : event));
+                state.events = state.events.map((event) => (event.id === eventById.id ? eventById : event));
                 state.error = null;
             })
             .addCase(deleteTicketsAction.rejected, (state, { error }) => {
+                state.deleteEventStatus = 'error';
                 state.error = error;
             });
     },
