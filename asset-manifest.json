@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/afisha/static/css/main.9dca0805.css",
-    "main.js": "/afisha/static/js/main.00cc09c7.js",
+    "main.js": "/afisha/static/js/main.a6cafd66.js",
     "static/js/787.a82ced20.chunk.js": "/afisha/static/js/787.a82ced20.chunk.js",
     "static/media/calendar-icon.svg": "/afisha/static/media/calendar-icon.bbff8871c00ae8214b062176de22c1fe.svg",
     "static/media/loader.svg": "/afisha/static/media/loader.a1daabc1038b4c9bbea1788a0617036d.svg",
@@ -10,11 +10,11 @@
     "index.html": "/afisha/index.html",
     "static/media/geo-icon.svg": "/afisha/static/media/geo-icon.c1b7eac9bb58e12b88e81ad998b1690c.svg",
     "main.9dca0805.css.map": "/afisha/static/css/main.9dca0805.css.map",
-    "main.00cc09c7.js.map": "/afisha/static/js/main.00cc09c7.js.map",
+    "main.a6cafd66.js.map": "/afisha/static/js/main.a6cafd66.js.map",
     "787.a82ced20.chunk.js.map": "/afisha/static/js/787.a82ced20.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.9dca0805.css",
-    "static/js/main.00cc09c7.js"
+    "static/js/main.a6cafd66.js"
   ]
 }
