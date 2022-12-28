@@ -1,5 +1,5 @@
 import './App.scss';
-import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { ShoppingCartPage } from '../pages/ShoppingCartPage';
 import { EventPage } from '../pages/EventPage';
 import { MainPage } from '../pages/MainPage';
@@ -7,12 +7,14 @@ import { cn } from '@bem-react/classname';
 import moment from 'moment';
 import 'moment-timezone';
 import 'moment/locale/ru';
-import { ShoppingCartIcon } from '../assets';
+import { AvatarIcon } from '../assets';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AuthPage } from '../pages/AuthPage';
 import { RegistrationPage } from '../pages/RegistrationPage';
 import { unAuthorizeAction } from '../store/actions/user';
+import { EventEditPage } from '../pages/EventEditPage';
+import { useRole } from '../hooks/useRole';
 
 moment.locale('ru');
 moment.tz.load({
@@ -32,6 +34,8 @@ export const App = () => {
 
     const { isAuthorized } = useSelector((store) => store.user);
 
+    const { isStaff } = useRole();
+
     const handleLogout = useCallback(() => {
         dispatch(unAuthorizeAction());
     }, [dispatch]);
@@ -42,6 +46,11 @@ export const App = () => {
                 <Link to="/" className={cnApp('title-wrapper')}>
                     <h1 className={cnApp('title')}>Афиша Насти Федотовой</h1>
                 </Link>
+                {['/'].includes(location?.pathname) && isStaff && (
+                    <Link to="/event/create" className={cnApp('button')}>
+                        Новое событие
+                    </Link>
+                )}
                 {!['/auth', '/registration'].includes(location?.pathname) && (
                     <>
                         {isAuthorized ? (
@@ -54,7 +63,7 @@ export const App = () => {
                             </Link>
                         )}
                         <Link to="/shopping-cart">
-                            <ShoppingCartIcon width={44} height={44} />
+                            <AvatarIcon width={34} height={34} style={{marginTop:7}}/>
                         </Link>
                     </>
                 )}
@@ -63,9 +72,17 @@ export const App = () => {
                 <Route path="/" element={<MainPage />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/registration" element={<RegistrationPage />} />
-                <Route path="/event/:id/" element={isAuthorized ? <EventPage /> : <AuthPage />} />
+                <Route path="/event/:id/" element={<EventPage />} />
                 <Route path="/shopping-cart" element={isAuthorized ? <ShoppingCartPage /> : <AuthPage />} />
-                <Route path="*" element={<MainPage />} />
+                <Route
+                    path="/event/edit/:id"
+                    element={isAuthorized ? <EventEditPage isCreateMode={false} /> : <AuthPage />}
+                />
+                <Route
+                    path="/event/create"
+                    element={isAuthorized ? <EventEditPage isCreateMode={true} /> : <AuthPage />}
+                />
+                <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </div>
     );

@@ -1,4 +1,4 @@
-import { getApiRequest, patchApiRequest } from '..';
+import { deleteApiRequest, getApiRequest, patchApiRequest, postApiRequest } from '..';
 
 export const getEvents = async (values) => {
     return await getApiRequest(`/events/`, {
@@ -22,4 +22,12 @@ export const getEventsPriceRange = async () => {
 export const patchEventById = async (params) => {
     const { id_event, ...param } = params;
     return await patchApiRequest(`/events/${id_event}/`, param);
+};
+
+export const createEvent = async (params) => {
+    return await postApiRequest(`/events/`, params);
+};
+
+export const deleteEvent = async (id_event) => {
+    return await deleteApiRequest(`/events/${id_event}/`);
 };

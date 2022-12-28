@@ -54,6 +54,7 @@ const userSlice = createSlice({
             .addCase(unAuthorizeAction.fulfilled, (state) => {
                 state.logoutStatus = 'fetched';
                 state.isAuthorized = false;
+                state.user = null;
                 state.error = null;
             })
             .addCase(unAuthorizeAction.rejected, (state, { error }) => {

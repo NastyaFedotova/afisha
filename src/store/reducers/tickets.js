@@ -2,7 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
     createBookedTicketsAction,
     deleteTicketsAction,
+    getCancelledTicketsAction,
     getTicketsAction,
+    getTicketStatusesAction,
+    patchCancelledTicketsAction,
     patchTicketsAction,
 } from '../actions/tickets';
 
@@ -11,7 +14,11 @@ const initialState = {
     getTicketsStatus: 'initial',
     updateTicketStatus: 'initial',
     deleteTicketStatus: 'initial',
+    getTicketStatusesStatus: 'initial',
+    getCancelledTicketStatus: 'initial',
+    ticketStatuses: [],
     tickets: [],
+    cancelledTickets: [],
     error: null,
 };
 
@@ -57,7 +64,7 @@ const ticketsSlice = createSlice({
             })
             .addCase(patchTicketsAction.fulfilled, (state, { payload }) => {
                 state.updateTicketStatus = 'fetch';
-                state.tickets = state.tickets?.filter((ticket) => ticket.id !== payload.id) ?? [];
+                state.tickets = state.tickets?.map((ticket) => (ticket.id === payload.id ? payload : ticket)) ?? [];
                 state.error = null;
             })
             .addCase(patchTicketsAction.rejected, (state, { error }) => {
@@ -70,13 +77,53 @@ const ticketsSlice = createSlice({
                 state.error = null;
             })
             .addCase(deleteTicketsAction.fulfilled, (state, { payload }) => {
-                const { id_ticket } = payload;
-
                 state.deleteTicketStatus = 'fetch';
-                state.tickets = state.tickets?.filter((ticket) => ticket.id !== id_ticket) ?? [];
+                state.tickets = state.tickets?.filter((ticket) => ticket?.id !== payload?.id) ?? [];
                 state.error = null;
             })
             .addCase(deleteTicketsAction.rejected, (state, { error }) => {
+                state.deleteTicketStatus = 'error';
+                state.error = error;
+            });
+        builder
+            .addCase(getTicketStatusesAction.pending, (state) => {
+                state.getTicketStatusesStatus = 'fetching';
+                state.error = null;
+            })
+            .addCase(getTicketStatusesAction.fulfilled, (state, { payload }) => {
+                state.getTicketStatusesStatus = 'fetch';
+                state.ticketStatuses = payload;
+                state.error = null;
+            })
+            .addCase(getTicketStatusesAction.rejected, (state, { error }) => {
+                state.getTicketStatusesStatus = 'error';
+                state.error = error;
+            });
+        builder
+            .addCase(getCancelledTicketsAction.pending, (state) => {
+                state.getCancelledTicketStatus = 'fetching';
+                state.error = null;
+            })
+            .addCase(getCancelledTicketsAction.fulfilled, (state, { payload }) => {
+                state.getCancelledTicketStatus = 'fetch';
+                state.cancelledTickets = payload;
+                state.error = null;
+            })
+            .addCase(getCancelledTicketsAction.rejected, (state, { error }) => {
+                state.getCancelledTicketStatus = 'error';
+                state.error = error;
+            });
+        builder
+            .addCase(patchCancelledTicketsAction.pending, (state) => {
+                state.deleteTicketStatus = 'fetching';
+                state.error = null;
+            })
+            .addCase(patchCancelledTicketsAction.fulfilled, (state, { payload }) => {
+                state.deleteTicketStatus = 'fetch';
+                state.tickets = state.tickets?.filter((ticket) => ticket?.id !== payload?.id) ?? [];
+                state.error = null;
+            })
+            .addCase(patchCancelledTicketsAction.rejected, (state, { error }) => {
                 state.deleteTicketStatus = 'error';
                 state.error = error;
             });
