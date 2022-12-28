@@ -25,6 +25,19 @@
         padding-top: 20px;
     }
 
+    &-filters {
+        display: flex;
+        flex-direction: row;
+        gap: 14px;
+    }
+
+    &-date{
+        border-radius: 8px;
+        outline: none;
+        border: 2px solid #ff8a8a;
+        font-size: 26px;
+    }
+
     &-container {
         max-width: 1320px;
         width: 100%;

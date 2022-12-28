@@ -9,6 +9,8 @@ export const getTickets = async (get_params) => {
         params: {
             user_id: get_params?.user_id, //фильтр
             ticket_status: get_params?.ticket_status, //фильтр
+            event_id: get_params?.event_id,
+            status: get_params?.status
         },
     });
 };
@@ -25,4 +27,8 @@ export const patchTickets = async (patch_params) => {
 
 export const deleteTickets = async (id_ticket) => {
     return await deleteApiRequest(`/tickets/${id_ticket}/`);
+};
+
+export const getTicketStatuses = async () => {
+    return await getApiRequest(`/tickets/ticket_statuses/`);
 };

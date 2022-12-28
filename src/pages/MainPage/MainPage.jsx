@@ -9,6 +9,7 @@ import { Form, Field } from 'react-final-form';
 import { resetEventsState } from '../../store/reducers/events';
 import { PageLoader } from '../../components/PageLoader';
 import { useLoader } from '../../hooks/useLoader';
+import { useRole } from '../../hooks/useRole';
 
 const cnMainPage = cn('main-page');
 
@@ -17,9 +18,10 @@ export const MainPage = () => {
     const { events, getEventsStatus, eventsPriceRange, getEventsPriceRangeStatus } = useSelector(
         (store) => store.events,
     );
-    const { isAuthorized } = useSelector((store) => store.user);
 
     useLoader([getEventsStatus, getEventsPriceRangeStatus]);
+
+    const { isStaff } = useRole();
 
     useEffect(() => {
         if (getEventsStatus === 'initial') {
@@ -50,7 +52,6 @@ export const MainPage = () => {
                                     className={cnMainPage('filter-input')}
                                     type="text"
                                     placeholder="Название мероприятия"
-                                    disabled={!isAuthorized}
                                 />
                             )}
                         </Field>
@@ -67,7 +68,6 @@ export const MainPage = () => {
                                         className={cnMainPage('filter-input')}
                                         type="number"
                                         placeholder={`Мин. цена ${eventsPriceRange?.price_min}руб.`}
-                                        disabled={!isAuthorized}
                                     />
                                 );
                             }}
@@ -85,12 +85,11 @@ export const MainPage = () => {
                                         className={cnMainPage('filter-input')}
                                         type="number"
                                         placeholder={`Макс. цена ${eventsPriceRange?.price_max}руб.`}
-                                        disabled={!isAuthorized}
                                     />
                                 );
                             }}
                         </Field>
-                        <button type="submit" className={cnMainPage('filter-button')} disabled={!isAuthorized}>
+                        <button type="submit" className={cnMainPage('filter-button')}>
                             Поиск
                         </button>
                     </form>
@@ -99,7 +98,7 @@ export const MainPage = () => {
             <div className={cnMainPage('events-wrapper')}>
                 {events.map((event, index) => (
                     <Link to={`/event/${event.id}`} className={cnMainPage('link')}>
-                        <EventCard key={index} event={event} />
+                        <EventCard key={index} event={event} isStaff={isStaff} />
                     </Link>
                 ))}
             </div>

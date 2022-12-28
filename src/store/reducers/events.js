@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
+    canceledEventAction,
+    createEventAction,
     getEventByIdAction,
     getEventsAction,
     getEventsPriceRangeAction,
     patchEventByIdAction,
 } from '../actions/events';
-import { deleteTicketsAction } from '../actions/tickets';
 
 const initialState = {
     getEventsStatus: 'initial',
@@ -14,6 +15,7 @@ const initialState = {
     patchEventByIdStatus: 'initial',
     changeEventRemainingTicketsStatus: 'initial',
     deleteEventStatus: 'initial',
+    createEventStatus: 'initial',
     events: [],
     eventsPriceRange: null,
     error: null,
@@ -83,17 +85,28 @@ const eventsSlice = createSlice({
                 state.error = error;
             });
         builder
-            .addCase(deleteTicketsAction.pending, (state) => {
+            .addCase(createEventAction.pending, (state) => {
+                state.createEventStatus = 'fetching';
+                state.error = null;
+            })
+            .addCase(createEventAction.fulfilled, (state) => {
+                state.createEventStatus = 'fetch';
+                state.error = null;
+            })
+            .addCase(createEventAction.rejected, (state, { error }) => {
+                state.createEventStatus = 'error';
+                state.error = error;
+            });
+        builder
+            .addCase(canceledEventAction.pending, (state) => {
                 state.deleteEventStatus = 'fetching';
                 state.error = null;
             })
-            .addCase(deleteTicketsAction.fulfilled, (state, { payload }) => {
+            .addCase(canceledEventAction.fulfilled, (state) => {
                 state.deleteEventStatus = 'fetch';
-                const { eventById } = payload;
-                state.events = state.events.map((event) => (event.id === eventById.id ? eventById : event));
                 state.error = null;
             })
-            .addCase(deleteTicketsAction.rejected, (state, { error }) => {
+            .addCase(canceledEventAction.rejected, (state, { error }) => {
                 state.deleteEventStatus = 'error';
                 state.error = error;
             });

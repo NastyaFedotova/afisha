@@ -18,6 +18,7 @@ import {
 import moment from 'moment';
 import { useLoader } from '../../hooks/useLoader';
 import { createBookedTicketsAction } from '../../store/actions/tickets';
+import { resetTicketsState } from '../../store/reducers/tickets';
 
 const cnEventPage = cn('event-page');
 
@@ -73,14 +74,17 @@ export const EventPage = () => {
                     remaining_tickets: eventInfo?.remaining_tickets - ticketsCount,
                 }),
             );
-            
         }
         setTicketsCount('');
-    }, [dispatch, event_id, ticketsCount, eventInfo, user.id]);
+    }, [dispatch, event_id, ticketsCount, eventInfo, user?.id]);
 
-    useEffect(() => {
-        return () => dispatch(resetEventsState());
-    }, [dispatch]);
+    useEffect(
+        () => () => {
+            dispatch(resetEventsState());
+            dispatch(resetTicketsState());
+        },
+        [dispatch],
+    );
 
     return (
         <div className={cnEventPage()}>
@@ -93,7 +97,9 @@ export const EventPage = () => {
                 <div className={cnEventPage('container')}>
                     {eventInfo !== undefined && (
                         <>
-                            <div className={cnEventPage('title')}>{eventInfo.title}</div>
+                            <div className={cnEventPage('title')}>{`${eventInfo.title} ${
+                                eventInfo.cancelled ? '(Отменено)' : ''
+                            }`}</div>
                             <div className={cnEventPage('mainInfo')}>
                                 <img src={eventInfo.img} className={cnEventPage('img')} />
                                 <div className={cnEventPage('info')}>
@@ -109,7 +115,6 @@ export const EventPage = () => {
                                             <span className={cnEventPage('info-description')}>{eventInfo.place}</span>
                                         </div>
                                     )}
-
                                     <div>
                                         <div className={cnEventPage('info-title')}>Адрес</div>
                                         <span className={cnEventPage('info-description')}>{eventInfo.address}</span>
@@ -131,9 +136,10 @@ export const EventPage = () => {
                                         value={ticketsCount}
                                         onChange={onTicketsCountChange}
                                         placeholder="Кол-во билетов"
+                                        disabled={eventInfo.cancelled}
                                     />
                                     <button
-                                        disabled={!ticketsCount || ticketsCount < 1}
+                                        disabled={!ticketsCount || ticketsCount < 1 || eventInfo.cancelled}
                                         className={cnEventPage('ticket-button', {
                                             active: Boolean(ticketsCount) && ticketsCount >= 1,
                                         })}
